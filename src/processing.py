@@ -3,6 +3,8 @@ import numpy as np
 import imutils
 from typing import List, Tuple
 
+from src.plots import plot_result
+
 #colors range for segmentation
 color1 = (80, 80, 80)
 color2 = (170, 250, 260)
@@ -68,7 +70,7 @@ def select_points(c: np.ndarray) -> List[Tuple[float, float]]:
     points.append((cr[idx9][0][0]-r, cr[idx9][0][1]))
     points.append((cr[idx10][0][0]-r, cr[idx10][0][1]))
     points.append((cr[idx11][0][0]-r, cr[idx11][0][1]))
-    points.append(cr[idx12][0][0]-r, cr[idx12][0][1]))
+    points.append((cr[idx12][0][0]-r, cr[idx12][0][1]))
 
     # points from left
     cl = c[np.where(c[:, 0, 0] < cx)]
@@ -85,18 +87,21 @@ def select_points(c: np.ndarray) -> List[Tuple[float, float]]:
     return points
 
 
-def mean_color(points: List[Tuple[float, float]]) - > List[np.ndarray]:
+def mean_color(points: List[Tuple[float, float]], img: np.ndarray) -> List[np.ndarray]:
     res = []
     for p in points:
-        mask = np.zeros_like(img_copy)
+        mask = np.zeros_like(img)
         mask = cv2.circle(mask, p, r, (255,255,255), -1)
-        result = cv2.cvtColor(img_copy.copy(), cv2.COLOR_BGR2BGRA)
+        result = cv2.cvtColor(img.copy(), cv2.COLOR_BGR2BGRA)
         result[:, :, 3] = mask[:,:,0]
         res.append(result[np.where(result[:,:, 3] > 0)].mean(axis=0))
     return res
 
 
-def process_image(image: np.ndarray):
+def process_image(image: np.ndarray, plot=False):
     cnt = extract_contour(image)
     points = select_points(cnt)
-    colors = mean_color(points)
+    colors = mean_color(points, image)
+    if plot:
+        plot_result(image, cnt, points, r)
+    return colors
