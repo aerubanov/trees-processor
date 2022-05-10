@@ -98,10 +98,10 @@ def mean_color(points: List[Tuple[float, float]], img: np.ndarray) -> List[np.nd
     return res
 
 
-def process_image(image: np.ndarray, plot=False):
+def process_image(image: np.ndarray, plot=None):
     cnt = extract_contour(image)
     points = select_points(cnt)
     colors = mean_color(points, image)
     if plot:
-        plot_result(image, cnt, points, r)
+        plot_result(image, cnt, points, r, plot)
     return colors
