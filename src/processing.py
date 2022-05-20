@@ -4,11 +4,8 @@ import imutils
 from typing import List, Tuple
 
 from src.plots import plot_result
+from src.constants import color1, color2, r
 
-#colors range for segmentation
-color1 = (80, 80, 80)
-color2 = (170, 250, 260)
-r = 15 # cirles radius
 
 def extract_contour(img: np.ndarray) -> np.ndarray:
     # image segmentation based on HSV colors

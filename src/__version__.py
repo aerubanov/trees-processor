@@ -1,0 +1,6 @@
+__title__ = "trees-processor"
+__discription__  = "Trees cuts image processing."
+__version__ = "0.1.0"
+__author__ = "Anantoly Rubanov"
+__author_email__ = "anatolijrubanov@gmail.com"
+__license__ = ""
