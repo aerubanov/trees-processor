@@ -4,7 +4,7 @@ import os
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-packages = ['trees-processor']
+packages = ['trees_processor']
 
 requires = [
     "numpy==1.22",
@@ -16,7 +16,7 @@ test_requirements = []
 
 about={}
 with open(os.path.join(here, "src", "__version__.py")) as f:
-    exac(f.read(), about)
+    exec(f.read(), about)
 
 with open('README.md') as f:
     readme = f.read()
@@ -26,15 +26,13 @@ history = ''
 setup(
     name=about['__title__'],
     version=about['__version__'],
-    description=about['__description__'],
     long_description=readme + '\n\n' + history,
     long_description_content_type='text/markdown',
     author=about['__author__'],
     author_email=about['__author_email__'],
     packages=packages,
-    package_dir={'trees-processor': 'src'},
+    package_dir={'trees_processor': 'src'},
     include_package_data=True,
-    dependency_links=dependency_links,
     install_requires=requires,
     license=about['__license__'],
     zip_safe=False,
