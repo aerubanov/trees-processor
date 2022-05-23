@@ -7,10 +7,10 @@ here = os.path.abspath(os.path.dirname(__file__))
 packages = ['trees_processor']
 
 requires = [
-    "numpy==1.21",
-    "matplotlib==3.5.1",
-    "opencv-python==4.5.5.64",
-    "imutils==0.5.4",
+    "numpy==1.22",
+	"matplotlib==3.5.1",
+	"opencv-python==4.5.5.64",
+	"imutils==0.5.4",
 ]
 test_requirements = []
 

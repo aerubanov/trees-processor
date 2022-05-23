@@ -1,4 +1,4 @@
-__title__ = "trees-processor"
+__title__ = "trees_processor"
 __discription__  = "Trees cuts image processing."
 __version__ = "0.1.0"
 __author__ = "Anantoly Rubanov"
