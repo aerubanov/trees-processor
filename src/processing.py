@@ -26,6 +26,26 @@ def extract_contour(img: np.ndarray) -> np.ndarray:
     return c
 
 
+def calc_min_distance(point: Tuple[float, float], cnt: np.ndarray) -> float:
+    x, y = point
+    x_c, y_c = cnt[:, 0, 0], cnt[:, 0, 1]
+    distancies = np.sqrt(np.power(x - x_c, 2) + np.power(y - y_c, 2))
+    return np.min(distancies)
+
+
+def check_point(point: Tuple[float, float], cnt: np.ndarray, point_type: str) -> Tuple[float, float]:
+    while(calc_min_distance(point, cnt) < r):
+        if point_type == "top":
+            point = (point[0], point[1] + 1)
+        elif point_type == "left":
+            point = (point[0] +1, point[1])
+        elif point_type == "right":
+            point = (point[0] - 1, point[1])
+        elif point_type == "bottom":
+            point = (point[0], point[1] - 1)
+    return point
+
+
 def select_points(c: np.ndarray) -> List[Tuple[float, float]]:
     # find countur centr
     M = cv2.moments(c)
@@ -40,10 +60,10 @@ def select_points(c: np.ndarray) -> List[Tuple[float, float]]:
     idx3 = np.abs(cb[:, 0, 0] - (cx+r)).argmin()
     idx4 = np.abs(cb[:, 0, 0] - (cx+3*r)).argmin()
 
-    points.append((cb[idx1][0][0], cb[idx1][0][1]-r))
-    points.append((cb[idx2][0][0], cb[idx2][0][1]-r))
-    points.append((cb[idx3][0][0], cb[idx3][0][1]-r))
-    points.append((cb[idx4][0][0], cb[idx4][0][1]-r))
+    points.append(check_point((cb[idx1][0][0], cb[idx1][0][1]-r), cb, "bottom"))
+    points.append(check_point((cb[idx2][0][0], cb[idx2][0][1]-r), cb, "bottom"))
+    points.append(check_point((cb[idx3][0][0], cb[idx3][0][1]-r), cb, "bottom"))
+    points.append(check_point((cb[idx4][0][0], cb[idx4][0][1]-r), cb, "bottom"))
 
     # points from top
     ct = c[np.where(c[:, 0, 1] < cy)]
@@ -52,10 +72,10 @@ def select_points(c: np.ndarray) -> List[Tuple[float, float]]:
     idx7 = np.abs(ct[:, 0, 0] - (cx+r)).argmin()
     idx8 = np.abs(ct[:, 0, 0] - (cx+3*r)).argmin()
 
-    points.append((ct[idx5][0][0], ct[idx5][0][1]+r))
-    points.append((ct[idx6][0][0], ct[idx6][0][1]+r))
-    points.append((ct[idx7][0][0], ct[idx7][0][1]+r))
-    points.append((ct[idx8][0][0], ct[idx8][0][1]+r))
+    points.append(check_point((ct[idx5][0][0], ct[idx5][0][1]+r), ct, "top"))
+    points.append(check_point((ct[idx6][0][0], ct[idx6][0][1]+r), ct, "top"))
+    points.append(check_point((ct[idx7][0][0], ct[idx7][0][1]+r), ct, "top"))
+    points.append(check_point((ct[idx8][0][0], ct[idx8][0][1]+r), ct, "top"))
 
     # points from right
     cr = c[np.where(c[:, 0, 0] > cx)]
@@ -64,10 +84,10 @@ def select_points(c: np.ndarray) -> List[Tuple[float, float]]:
     idx11 = np.abs(cr[:, 0, 1] - (cy+r)).argmin()
     idx12 = np.abs(cr[:, 0, 1] - (cy+3*r)).argmin()
 
-    points.append((cr[idx9][0][0]-r, cr[idx9][0][1]))
-    points.append((cr[idx10][0][0]-r, cr[idx10][0][1]))
-    points.append((cr[idx11][0][0]-r, cr[idx11][0][1]))
-    points.append((cr[idx12][0][0]-r, cr[idx12][0][1]))
+    points.append(check_point((cr[idx9][0][0]-r, cr[idx9][0][1]), cr, "right"))
+    points.append(check_point((cr[idx10][0][0]-r, cr[idx10][0][1]), cr, "right"))
+    points.append(check_point((cr[idx11][0][0]-r, cr[idx11][0][1]), cr, "right"))
+    points.append(check_point((cr[idx12][0][0]-r, cr[idx12][0][1]), cr, "right"))
 
     # points from left
     cl = c[np.where(c[:, 0, 0] < cx)]
@@ -76,10 +96,10 @@ def select_points(c: np.ndarray) -> List[Tuple[float, float]]:
     idx15 = np.abs(cl[:, 0, 1] - (cy+r)).argmin()
     idx16 = np.abs(cl[:, 0, 1] - (cy+3*r)).argmin()
 
-    points.append((cl[idx13][0][0]+r, cl[idx13][0][1]))
-    points.append((cl[idx14][0][0]+r, cl[idx14][0][1]))
-    points.append((cl[idx15][0][0]+r, cl[idx15][0][1]))
-    points.append((cl[idx16][0][0]+r, cl[idx16][0][1]))
+    points.append(check_point((cl[idx13][0][0]+r, cl[idx13][0][1]), cl, "left"))
+    points.append(check_point((cl[idx14][0][0]+r, cl[idx14][0][1]), cl, "left"))
+    points.append(check_point((cl[idx15][0][0]+r, cl[idx15][0][1]), cl, "left"))
+    points.append(check_point((cl[idx16][0][0]+r, cl[idx16][0][1]), cl, "left"))
     
     return points
 
