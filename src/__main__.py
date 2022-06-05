@@ -6,6 +6,7 @@ import numpy as np
 from pathlib import Path
 
 from src.processing import process_image
+from src.output import print_results
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -23,7 +24,9 @@ parser.add_argument(
 def main(filename: str, save_result=None):
     img = cv2.imread(filename)
     img = cv2.resize(img, (1280, 1024))
-    print(process_image(img, plot=save_result))
+    result = process_image(img, plot=save_result)
+    print_results([filename], [result])
+
 
 def get_np_array_from_tar_object(tar_extractfl):
      '''converts a buffer from a tar file in np.array'''
@@ -33,10 +36,10 @@ def get_np_array_from_tar_object(tar_extractfl):
 
 
 def process_rar(filename: str, save_result=None):
-    print(save_result)
     if save_result:
         Path(save_result).mkdir(parents=True, exist_ok=True)
     tar = tarfile.open(filename, 'r|*')
+    filenames, results = [], []
     for file in tar:
         data = tar.extractfile(file)
         if data:
@@ -48,7 +51,9 @@ def process_rar(filename: str, save_result=None):
             out_file = None
             if save_result:
                 out_file = os.path.join(save_result, file.name.split('/')[-1])
-            print(process_image(img, plot=out_file))
+            filenames.append(file.name.split('/')[-1])
+            results.append(process_image(img, plot=out_file))
+    print_results(filenames, results)
 
 
 if __name__ == "__main__":
